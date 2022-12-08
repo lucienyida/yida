@@ -9,7 +9,7 @@
  * 代码优化:小鹿
  * 项目测试:小鹿--漫步者--余生---可能有未知BUG
  * ========= 青龙 =========
- * 变量格式：export xboxtoken=' extra_data中的sid '  多个账号用 @分割 
+ * 变量格式：export xboxtoken=' extra_data中的sid '  多个账号用@分割 
  * 当前变量测试 extra_data中的sid  该参数:进入小程序后点击授权后开启抓包 随意进入一个页面抓链接h5.youzan.com中的请求体中的sid参数
  */
 
