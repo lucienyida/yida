@@ -3,7 +3,7 @@
 邀请注册：http://wx.smartservice.bjev.com.cn/register.html?id=8a8d81de81fd7e8701823589a4aa5bcb
 
 积分换实物
-自动完成签到和转发任务，其他任务不会做
+自动完成签到和转发任务，其他任务不会做.
 
 https://api.smartservice.bjev.com.cn/gateway-api/v1/users/xxxxxxxxx
 捉包把上面url的后面那串id，跟header里的Authorization(去掉Bearer)用#连起来，填到bjqcCookie里
