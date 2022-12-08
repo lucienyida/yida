@@ -1,7 +1,7 @@
 /*
 
 12.07
-由于token时效太短 改成密码登录
+由于token时效太短 改为密码登录
 
 正汉DR
 注册地址    https://raw.githubusercontent.com/liuqi6968/-/main/mmexport646bbce1fec5339a655030cb18cabf0f_1669206408421.png
