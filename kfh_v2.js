@@ -2,7 +2,7 @@
  *
  * 卡夫亨
  *
- * cron 0 0,7 * * *  kfh_v2.js         
+ * cron 0 0,8 * * *  kfh_v2.js         
  *  多账号并行执行任务模板 
  * fscrm.kraftheinz.net.cn/crm/域名下的token
  */
