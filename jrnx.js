@@ -1,6 +1,6 @@
 /**
  * 今日南浔
- * cron 10 7 * * *  jrnx.js
+ * cron 10 8 * * *  jrnx.js
  *
  * https://app.tmuyun.com/webChannels/invite?inviteCode=J8YDP9&tenantId=11&accountId=637b7334b77d2e7e53f07937
  * 
