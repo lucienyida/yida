@@ -2,7 +2,7 @@
  *
  * 卡夫味
  *
- * cron 0 0,7 * * *  kfw_v2.js         
+ * cron 0 0,8 * * *  kfw_v2.js         
  *  多账号并行执行任务模板 
  * 抓域名kraftheinzcrm.kraftheinz.net.cn/crm/public下 请求token
  */
