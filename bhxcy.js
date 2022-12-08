@@ -3,7 +3,7 @@
 
 签到积分换E卡，每天跑一到两次
 捉小程序里的uid和token填到bhxcytoken里，多账号换行或者@隔开，格式如下
-export bhxcytoken="uid=1234567&token=qweqwertyuio"
+export bhxcytoken="uid=123456&token=qweqwertyuio"
 
 重写: 打开渤海宣传员-微信小程序
 [task_local]
