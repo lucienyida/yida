@@ -1,6 +1,6 @@
 /*
 什么值得买-签到
-cron: 22 7,20 * * *
+cron: 20 7,20 * * *
 
 把捉到的cookie填到smzdmCookie里，@隔开
 */
