@@ -1,7 +1,7 @@
 /**
  作者：临渊
  日期：7-23
- 软件：红旗智联
+ 软件：红旗智联app
  抓包：hqapp.faw.cn/fawcshop 这个域名里请求体 Authorization 和 aid
  变量：两个 hqAPP：Authorization hqAid：aid
  定时一天一次
