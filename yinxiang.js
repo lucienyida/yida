@@ -1,6 +1,6 @@
 /**
  * 鄞响
- * cron 25 10,20 * * *  yx.js
+ * cron 20 10,20 * * *  yx.js
  *
  * https://app.tmuyun.com/webChannels/invite?inviteCode=J8YS49&tenantId=61&accountId=637b72beb77d2e7e53f075fb
  * 
