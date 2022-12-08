@@ -2,7 +2,7 @@
 长城炮
 扫码注册：https://raw.githubusercontent.com/leafTheFish/DeathNote/main/ccp.png
 
-积分换实物和视频会员
+积分换实物和视频会员.
 一天跑三四次吧，有时做任务会出错以免做不完
 
 青龙变量  ccpAccount
