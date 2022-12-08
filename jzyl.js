@@ -1,5 +1,5 @@
 /*
-健走有礼
+健走有礼 小程序
 扫码注册：https://raw.githubusercontent.com/leafTheFish/DeathNote/main/jzyl_invite.png
 
 存步数换现金提现的微信小程序，10W金币=1元
