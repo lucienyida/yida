@@ -1,5 +1,5 @@
 /*
-广汽传祺 APP
+广汽传祺APP
 扫码注册：https://raw.githubusercontent.com/leafTheFish/DeathNote/main/gqcq.png
 
 一天跑两次就行，自己改掉默认定时避免太多人同时跑
