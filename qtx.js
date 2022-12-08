@@ -2,7 +2,7 @@
   作者：临渊
   日期：5-21
   软件：青碳行
-  功能：签到、分享、回答问题、收取精力值
+  功能：签到、分享、回答问题、收取精力值等
   抓包：carbon.lcago.cn 这个域名 请求体 的body部分的 token 和 deviceCoding
   变量：export qtxtk='token1&deviceCoding1@token2&deviceCoding2'  多个账号用@或者换行分割 
   抓包之前请先把这些任务都点一下，手动开启一下，不然跑不了
