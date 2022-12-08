@@ -6,7 +6,7 @@
 打开微信-美团团购小程序或美团/美团外卖APP捉包
 青龙把*.meituan.com包里的userId(可选，用于区别多账号捉包),token填到meituanCookie里，多账号换行或者@隔开。格式：
 export meituanCookie='userId=12345678&token=ccccccccccccccccc'
-userId可以删掉不填
+userId单账户可以删掉不填
 
 变量:
 meituanCookie: 必填，账号cookie，多账号换行或者@或者&隔开，格式: userId=12345678&token=ccccccccccccccccc
