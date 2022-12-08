@@ -2,7 +2,7 @@
  *
  * Xbox俱乐部
  *
- * cron 0 0,7 * * *  xbox_v2.js         
+ * cron 0 0,8 * * *  xbox_v2.js         
  *  多账号并行执行任务模板V2  
  * 捉域名https://h5.youzan.com/wscuser/域名下的extra-data中的sid
  */
