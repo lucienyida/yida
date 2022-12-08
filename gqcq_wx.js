@@ -2,7 +2,7 @@
 广汽传祺-微信小程序
 
 捉包这个域名: mall.gacmotor.com
-登录微信小程序后，捉header里的token，填到gqcqWxCookie里，多账号换行或@或&隔开
+登录微信小程序，捉header里的token，填到gqcqWxCookie里，多账号换行或@或&隔开
 
 定时每天一次
 cron: 33 9 * * *
