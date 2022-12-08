@@ -7,7 +7,7 @@ export tkzxbxCookie="你的unionid"
 
 目前只支持签到和部分任务
 定时一天一两次就好
-cron: 40 9,21 * * *
+cron: 50 9,21 * * *
 
 重写：进入小程序自动获取ck
 [task_local]
