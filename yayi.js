@@ -3,7 +3,7 @@ APP：牙e家
 设置密码
 export yayihd='手机号&密码'
 多号@或换行隔开
-10话费
+兑换10话费
 */
 
 const $ = new Env('牙e家');
