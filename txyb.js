@@ -1,15 +1,13 @@
 /*
 地址：
 
-#小程序://我的医保凭证/LnmBrLqQFifQ8my
+#小程序://我的医保凭证/25jo3jPo4PzldTx
 
 复制以上 微信打开
 
 抓取wechat.wecity.qq.com域名
 查看请求头的sessionid
-变量
-export txybhd=''
-多号@隔开
+变量 export txybhd=''   多号@隔开
 corn 0 0 * * *
 */
 const $ = new Env('TX医保');
