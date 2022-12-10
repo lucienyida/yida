@@ -11,7 +11,7 @@
 1. 脚本仅供学习交流使用, 请在下载后24h内删除
 2. 需要第三方库 pycryptodome 支持 命令行安装 pip3 install pycryptodome或者根据自己环境自行安装
 3. 环境变量说明 PHONE_NUM(必需) UNICOM_LOTTER(选填) 自行新建环境变量添加
-    PHONE_NUM 为你的手机号  多账号使用&隔开
+    PHONE_NUM 为你的手机号
     UNICOM_LOTTER 默认自动抽奖, 若不需要 则添加环境变量值为 False
     推送通知的变量同青龙 只写了tgbot(支持反代api)和pushplus
 """
@@ -20,11 +20,11 @@ updateTime: 2022.12.1  log: 活动重新上架 改用 pycryptodome 替代 crypto
 updateTime: 2022.9.1  log: 每个月活动id改变更新
 """
 
-from requests import post
+from requests import post, get
 from time import sleep, time
 from datetime import datetime
 from hashlib import md5 as md5Encode
-from random import randint, uniform
+from random import randint, uniform, choice
 from os import environ
 from sys import stdout, exit
 from base64 import b64encode
@@ -33,9 +33,8 @@ from json import dumps
 from tools.encrypt_symmetric import Crypt
 from tools.send_msg import push
 from tools.tool import get_environ, random_sleep
-#random_sleep(0, 1600)
-from tools.ql_api import get_envs, disable_env, post_envs, put_envs
-import threading
+# random_sleep(0, 1600)
+
 
 """主类"""
 class China_Unicom:
@@ -116,17 +115,29 @@ class China_Unicom:
                 self.print_now("当前任务出现异常 正在重新执行")
                 self.fail_num += 1
                 self.main()
+                return False
             sleep(uniform(2, 8))
+        return True
 
     def read_novel(self):
+        self.get_cardid()
+        self.get_cntindex()
+        self.get_chapterallindex()
         self.print_now("正在执行观看150次小说, 此过程较久, 最大时长为150 * 8s = 20min")
         for i in range(150):
             date = datetime.today().__format__("%Y%m%d%H%M%S")
-            chapterAllIndex = randint(100000000, 999999999)
-            cntIndex = randint(1000000, 9999999)
-            url = f"https://10010.woread.com.cn/ng_woread_service/rest/cnt/wordsDetail?catid={randint(100000, 999999)}&pageIndex={randint(10000, 99999)}&cardid={randint(10000, 99999)}&cntindex={cntIndex}&chapterallindex={chapterAllIndex}&chapterseno=3"
-            crypt_text = f'{{"chapterAllIndex":{chapterAllIndex},"cntIndex":{cntIndex},"cntTypeFlag":"1","timestamp":"{date}","token":"{self.userinfo["token"]}","userId":"{self.userinfo["userid"]}","userIndex":{self.userinfo["userindex"]},"userAccount":"{self.userinfo["phone"]}","verifyCode":"{self.userinfo["verifycode"]}"}}'
-            self.req(url, crypt_text)
+            chapterAllIndex = choice(self.chapterallindex_list)
+            url = f"https://10010.woread.com.cn/ng_woread_service/rest/cnt/wordsDetail?catid={self.catid}&pageIndex={self.pageIndex}&cardid={randint(10000, 99999)}&cntindex={self.cntindex}&chapterallindex={chapterAllIndex}&chapterseno=3"
+            crypt_text = f'{{"chapterAllIndex":{chapterAllIndex},"cntIndex":{self.cntindex},"cntTypeFlag":"1","timestamp":"{date}","token":"{self.userinfo["token"]}","userId":"{self.userinfo["userid"]}","userIndex":{self.userinfo["userindex"]},"userAccount":"{self.userinfo["phone"]}","verifyCode":"{self.userinfo["verifycode"]}"}}'
+            data = self.req(url, crypt_text)
+            if self.fail_num == 3:
+                self.print_now("当前任务出现异常 且错误次数达到3次 请手动检查")
+                push("某通阅读", "阅读任务出现异常 且错误次数达到3次 请手动检查")
+                exit(0)
+            if data.get("code") != "0000":
+                self.print_now("阅读小说发生异常, 正在重新登录执行, 接口返回")
+                self.print_now(data)
+                return self.main()
             sleep(uniform(2, 8))
 
     def query_score(self):
@@ -147,7 +158,38 @@ class China_Unicom:
             self.activeIndex = data["data"]["activeindex"]
         else:
             self.print_now(f"活动id获取失败 将影响抽奖和查询积分")
-
+    def get_cardid(self):
+        """
+        获取cardid
+        :return:
+        """
+        url = "https://10010.woread.com.cn/ng_woread_service/rest/basics/getIntellectRecommend"
+        date = datetime.today().__format__("%Y%m%d%H%M%S")
+        crypt_text = f'{{"cntsize":8,"recommendsize":5,"recommendid":0,"timestamp":"{date}","token":"{self.userinfo["token"]}","userId":"{self.userinfo["userid"]}","userIndex":{self.userinfo["userindex"]},"userAccount":"{self.userinfo["phone"]}","verifyCode":"{self.userinfo["verifycode"]}"}}'
+        data = self.req(url, crypt_text)
+        # print(data)
+        self.pageIndex = data["data"]["recommendindex"] if "recommendindex" in data["data"] else "10725"
+        self.cardid = data["data"]["catindex"] if "catindex" in data["data"] else "119056"
+    def get_cntindex(self):
+        url = "https://10010.woread.com.cn/ng_woread_service/rest/basics/recommposdetail/12279"
+        self.headers.pop("Content-Length", "no")
+        data = get(url, headers=self.headers).json()
+        booklist = data["data"]["booklist"]["message"]
+        book_num = len(booklist)
+        self.catid = booklist[0]["catindex"] if "catindex" in booklist[0] else "119411"
+        self.cntindex = booklist[randint(0, book_num - 1)]["cntindex"]
+    def get_chapterallindex(self):
+        url = f"https://10010.woread.com.cn/ng_woread_service/rest/cnt/chalist?catid=119411&pageIndex=10725&cardid=12279&cntindex={self.cntindex}"
+        date = datetime.today().__format__("%Y%m%d%H%M%S")
+        crypt_text = f'{{"curPage":1,"limit":30,"index":"{self.cntindex}","sort":0,"finishFlag":1,"timestamp":"{date}","token":"{self.userinfo["token"]}","userId":"{self.userinfo["userid"]}","userIndex":{self.userinfo["userindex"]},"userAccount":"{self.userinfo["phone"]}","verifyCode":"{self.userinfo["verifycode"]}"}}'
+        data = self.req(url, crypt_text)
+        chapterallindexlist = data["list"][0]["charptercontent"]
+        chapterallindex_num = len(chapterallindexlist)
+        self.chapterallindex_list = [0] * chapterallindex_num
+        i = 0
+        while i < chapterallindex_num:
+            self.chapterallindex_list[i] = chapterallindexlist[i]["chapterallindex"]
+            i += 1
     def lotter(self):
         url = "https://10010.woread.com.cn/ng_woread_service/rest/activity/yearEnd/handleDrawLottery"
         date = datetime.today().__format__("%Y%m%d%H%M%S")
@@ -192,7 +234,8 @@ class China_Unicom:
     def main(self):
         self.referer_login()
         self.get_userinfo()
-        self.watch_video()
+        if not self.watch_video():
+            return
         self.get_activetion_id()
         self.read_novel()
         self.query_score()
@@ -203,60 +246,12 @@ class China_Unicom:
                 sleep(2)
             self.query_score()
         self.query_red()
-        exit(0)
 
 
-#获取ck
-def get_cookie():
-    ck_list = []
-    cookie = None
-    cookies = get_envs("PHONE_NUM")
-    for ck in cookies:
-        if ck.get('status') == 0:
-            ck_list.append(ck.get('value'))
-    if len(ck_list) < 1:
-        print('共配置{}条CK,请添加环境变量,或查看环境变量状态'.format(len(ck_list)))
-    return ck_list 
-
-        
-def start(phone):
-    if phone == "":
-        exit(0)
-    China_Unicom(phone).main()
-    print("\n")
-    print("\n")        
-
-    
-    
-        
 if __name__ == "__main__":
-    unicom_lotter = environ.get("UNICOM_LOTTER") if environ.get("UNICOM_LOTTER") else True
     """读取环境变量"""
-    l = []
-    user_map = []
-    cklist = get_cookie()
-    for i in range(len(cklist)):
-        #以#分割开的ck
-        split1 = cklist[i].split("&")
-        if len(split1)>1:
-            for j in range(len(split1)):
-                user_map.append(split1[j])
-        else:
-            user_map.append(cklist[i])
-    
-   
-    
-    for i in range(len(user_map)):
-        phone=""
-        phone = user_map[i].split("&")[0]
-        print('开始执行第{}个账号：{}'.format((i+1),phone))
-        if phone == "":
-            print("当前账号未填写手机号 跳过")
-            print("\n")
-            continue
-        p = threading.Thread(target=start,args=(phone,))
-        l.append(p)
-        p.start()
-        print("\n")
-    for i in l:
-        i.join()
+    phone_num = get_environ("PHONE_NUM")
+    unicom_lotter = get_environ("UNICOM_LOTTER", default=True)
+    if phone_num == "":
+        exit(0)
+    China_Unicom(phone_num).main()
