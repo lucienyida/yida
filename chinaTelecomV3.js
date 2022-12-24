@@ -7,7 +7,7 @@
 只支持node环境(如青龙),需安装crypto-js和 (node-rsa或jsencrypt) 依赖
 
 一天一两次即可,12点后跑一次来兑换连签的话费
-cron: 36 6,12 * * *
+cron: 0 0,2,5 12 * * *
 
 const $ = new Env("电信营业厅");
 */
