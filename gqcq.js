@@ -1,18 +1,18 @@
 /**
- * 广汽传祺
- * cron 30 7,9,10 * * *  gqcq.js
- * 3-20 随机延迟 一天运行3次 建议每个脚本不超过8个号
- * 5-20一天运行2-3次 改掉默认定时 
- * 5-22修复版本错误 减少禁言几率
- * 
+ * new Env("广汽传祺");
+ * cron 47 19 * * *  gqcq.js
+ * modify:低保版
  * ========= 青龙--配置文件 ===========
  * # 项目名称
- * export gqcq_data='token'
+ * 抓请求头token&imei&registrationID
+ * 缺一不可
+ * 不要用云服务器挂 不要用云服务器挂 不要用云服务器挂
+ * export gqcq_data='token&imei&registrationID'
  * 
  * 多账号用 @ 分割
  * 抓包 gsp.gacmotor.com , 找到token即可
  * ====================================
- *   
+ * 
  */
 
 
@@ -33,12 +33,11 @@ let topicIdArr = []//文章ID数组
 //---------------------------------------------------------
 
 async function start() {
-    console.log("一天运行3次,如果你有更多账号 N/3 次运行 N是你的账号数目");
     console.log('\n============= 用户CK有效性验证 =============\n');
     taskall = [];
     for (let user of userList) {
         taskall.push(await user.user_info());
-        await $.wait(3000);
+        //await $.wait(3000);
     }
     await Promise.all(taskall);
     console.log('\n================== 任务 ==================\n');
@@ -46,9 +45,9 @@ async function start() {
     for (let user of userList) {
         if (user.ckStatus) {
             taskall.push(await user.user_boxList());
-            await $.wait(3000);
+            //await $.wait(3000);
             taskall.push(await user.task_list());
-            await $.wait(3000);
+            //await $.wait(3000);
         }
     }
     await Promise.all(taskall);
@@ -68,7 +67,7 @@ async function start() {
     taskall = [];
     for (let user of userList) {
         taskall.push(await user.user_info());
-        await $.wait(3000);
+        //await $.wait(3000);
     }
     await Promise.all(taskall);
 
@@ -86,8 +85,8 @@ class UserInfo {
         this.ckStatus = true
         this.salt = '17aaf8118ffb270b766c6d6774317a134.1.2';
         this.reqNonc = randomInt(100000, 999999)
-        this.imei = 'a4dad7a1b1f865bc'
-        this.registrationID = "100d855909bb3584777"
+        this.imei = str.split('&')[1];
+        this.registrationID = str.split('&')[2];
         this.headersOne = {
             'token': this.ck,
             'reqTs': Number(ts13()),
@@ -230,7 +229,7 @@ class UserInfo {
                     for (let i = 0; i < this.box.length; i++) {
                         this.boxid = this.box[i].recordId
                         await this.task_openBox()
-                        await $.wait(2000)
+                        //await $.wait(2000)
                     }
                 }
             } else {
@@ -273,8 +272,8 @@ class UserInfo {
                     if (result.data[0].itemType == 0 && result.data[0].finishedNum == 0) {
                         DoubleLog(`账号[${this.index}] 签到状态： 未签到，去执行签到 ,顺便抽个奖`);
                         await this.task_signin();
-                        DoubleLog(`随机延迟${this.getRandomTime('1')}ms`)
-                        await $.wait(this.getRandomTime('1'))
+                        //DoubleLog(`随机延迟${this.getRandomTime('1')}ms`)
+                        //await $.wait(this.getRandomTime('1'))
                         await this.task_lottery();
                     } else if (result.data[0].finishedNum == 1) {
                         DoubleLog(`账号[${this.index}] 签到状态：今天已经签到过了鸭，明天再来吧！`);
@@ -282,39 +281,39 @@ class UserInfo {
                         DoubleLog(`账号[${this.index}] 获取签到状态:  失败 ❌ 了呢,原因未知！`);
                     }
                     if (result.data[1].itemType == 1 && result.data[1].finishedNum < 2) {
-                        DoubleLog(`账号[${this.index}] 发帖：${result.data[1].finishedNum} / ${result.data[1].total}`);
-                        DoubleLog(`账号[${this.index}] 发帖：执行一次发帖,评论，删除评论`);
-                        await this.post_topic();
-                        DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
-                        await $.wait(this.getRandomTime('2'))
-                        DoubleLog(`账号[${this.index}] 发帖：执行第二次发帖,评论，删除评论`);
-                        await this.post_topic();
+                        //DoubleLog(`账号[${this.index}] 发帖：${result.data[1].finishedNum} / ${result.data[1].total}`);
+                        //DoubleLog(`账号[${this.index}] 发帖：执行一次发帖,评论，删除评论`);
+                        //await this.post_topic();
+                        //DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
+                        //await $.wait(this.getRandomTime('2'))
+                        //DoubleLog(`账号[${this.index}] 发帖：执行第二次发帖,评论，删除评论`);
+                        //await this.post_topic();
                     } else if (result.data[1].finishedNum == 2) {
-                        DoubleLog(`账号[${this.index}] 今天已经发帖了，明天再来吧!`);
+                        //DoubleLog(`账号[${this.index}] 今天已经发帖了，明天再来吧!`);
                     } else {
-                        DoubleLog(`账号[${this.index}] 获取发帖状态:  失败 ❌ 了呢,原因未知!`);
+                        //DoubleLog(`账号[${this.index}] 获取发帖状态:  失败 ❌ 了呢,原因未知!`);
                     }
 
                     if (result.data[2].itemType == 2 && result.data[2].finishedNum < 2) {
                         //回复帖子
                     } else if (result.data[1].finishedNum == 2) {
-                        DoubleLog(`账号[${this.index}] 今天已经回复帖子了，明天再来吧!`);
+                        //DoubleLog(`账号[${this.index}] 今天已经回复帖子了，明天再来吧!`);
                     } else {
-                        DoubleLog(`账号[${this.index}] 获取回复帖子状态:  失败 ❌ 了呢,原因未知!`);
+                        //DoubleLog(`账号[${this.index}] 获取回复帖子状态:  失败 ❌ 了呢,原因未知!`);
                     }
 
                     if (result.data[3].finishedNum < 2) {
                         DoubleLog(`账号[${this.index}] 分享状态：${result.data[3].finishedNum} / ${result.data[3].total}`);
                         await this.task_share();
-                        DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
-                        await $.wait(this.getRandomTime('2'))
+                        //DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
+                        //await $.wait(this.getRandomTime('2'))
                         await this.task_share();
                     } else if (result.data[3].finishedNum == 2) {
                         DoubleLog(`账号[${this.index}] 今天已经分享过了鸭，明天再来吧!`);
                     } else {
                         DoubleLog(`账号[${this.index}] 获取分享状态:  失败 ❌ 了呢,原因未知!`);
                     }
-                    $.wait(this.getRandomTime('2'))
+                    //$.wait(this.getRandomTime('2'))
                     await this.query_list(this.userIdStr);
                 } else {
                     DoubleLog(`账号[${this.index}]  获取任务失效,原因未知！`);
@@ -401,8 +400,8 @@ class UserInfo {
                     DoubleLog(`账号[${this.index}]  发布帖子:${result.errorMessage} ,帖子ID: ${result.data.postId}`);
                     let topic_id = result.data.postId;
                     //topicIdArr.push(topic_id)
-                    DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
-                    await $.wait(this.getRandomTime('2'))
+                    //DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
+                    //await $.wait(this.getRandomTime('2'))
                     await this.add_comment(topic_id);
                 } else {
                     DoubleLog(`账号[${this.index}]  发布帖子失效,原因未知！`);
@@ -432,7 +431,7 @@ class UserInfo {
                 if (result.errorCode == 20000) {
                     DoubleLog(`账号[${this.index}]  评论帖子: 评论 ${topic_id} 帖子 ${result.errorMessage}`);
                     DoubleLog(`随机延迟${this.getRandomTime('2')}ms`)
-                    await $.wait(this.getRandomTime('2'))
+                    //await $.wait(this.getRandomTime('2'))
                 } else {
                     DoubleLog(`账号[${this.index}]  评论帖子失效,原因未知！`);
                     console.log(result);
@@ -573,7 +572,7 @@ class UserInfo {
                     DoubleLog(`账号[${this.index}] 点赞帖子${topicId}成功`);
                     //console.log(result);
                 }
-                await $.wait(30000);
+                //await $.wait(30000);
 
             } else {
                 return console.log(`Api请求频繁,退出请求`);
